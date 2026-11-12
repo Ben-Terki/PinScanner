@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PIN Scanner</string>
+
+    <string name="status_starting">Starting the camera…</string>
+    <string name="status_searching">Point the camera at the recharge code</string>
+    <string name="status_hold">Hold still… %1$s</string>
+    <string name="status_scanned">Code scanned</string>
+    <string name="status_camera_failed">Camera could not start. Close other camera apps and try again.</string>
+    <string name="status_no_permission">Camera permission is needed to scan cards</string>
+
+    <string name="hint">Fit the 16-digit code inside the frame. Avoid glare on the scratch area.</string>
+    <string name="history_button">History and export</string>
+
+    <string name="result_label">Top-up code</string>
+    <string name="confidence">%1$d%% match · confirmed on two reads</string>
+    <string name="copy">Copy</string>
+    <string name="copied">Code copied</string>
+    <string name="scan_again">Scan again</string>
+    <string name="saved_to_history">Saved to history</string>
+    <string name="torch">Torch</string>
+    <string name="torch_on">Torch on</string>
+
+    <string name="permission_title">Camera permission needed</string>
+    <string name="permission_text">The scanner reads the code on the card itself, so it never needs the internet. Allow camera access to continue.</string>
+    <string name="permission_grant">Allow camera</string>
+    <string name="permission_settings">Open settings</string>
+
+    <string name="history_title">History</string>
+    <string name="history_count">%1$d cards saved on this phone</string>
+    <string name="history_empty">No cards yet. Scanned codes are saved here automatically.</string>
+    <string name="export_txt">Export .txt</string>
+    <string name="clear">Clear</string>
+    <string name="export_done">File saved</string>
+    <string name="export_failed">Could not save the file</string>
+    <string name="clear_confirm_title">Delete all history?</string>
+    <string name="clear_confirm_text">This removes every saved code from this phone. Export first if you still need them.</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+</resources>

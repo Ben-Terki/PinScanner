@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="status_starting">Démarrage de la caméra…</string>
+    <string name="status_searching">Visez le code de recharge</string>
+    <string name="status_hold">Ne bougez plus… %1$s</string>
+    <string name="status_scanned">Code scanné</string>
+    <string name="status_camera_failed">La caméra n\'a pas démarré. Fermez les autres applis caméra et réessayez.</string>
+    <string name="status_no_permission">L\'autorisation caméra est nécessaire pour scanner</string>
+    <string name="hint">Cadrez le code de 16 chiffres. Évitez les reflets sur la zone grattée.</string>
+    <string name="history_button">Historique et export</string>
+    <string name="result_label">Code de recharge</string>
+    <string name="confidence">%1$d%% de correspondance · confirmé sur deux lectures</string>
+    <string name="copy">Copier</string>
+    <string name="copied">Code copié</string>
+    <string name="scan_again">Scanner à nouveau</string>
+    <string name="saved_to_history">Enregistré dans l\'historique</string>
+    <string name="torch">Lampe</string>
+    <string name="torch_on">Lampe allumée</string>
+    <string name="permission_title">Autorisation caméra requise</string>
+    <string name="permission_text">Le scanner lit le code sur la carte elle-même, il n\'a donc pas besoin d\'internet. Autorisez la caméra pour continuer.</string>
+    <string name="permission_grant">Autoriser la caméra</string>
+    <string name="permission_settings">Ouvrir les réglages</string>
+    <string name="history_title">Historique</string>
+    <string name="history_count">%1$d cartes enregistrées sur ce téléphone</string>
+    <string name="history_empty">Aucune carte pour le moment. Les codes scannés sont enregistrés ici automatiquement.</string>
+    <string name="export_txt">Exporter en .txt</string>
+    <string name="clear">Effacer</string>
+    <string name="export_done">Fichier enregistré</string>
+    <string name="export_failed">Impossible d\'enregistrer le fichier</string>
+    <string name="clear_confirm_title">Supprimer tout l\'historique ?</string>
+    <string name="clear_confirm_text">Tous les codes enregistrés sur ce téléphone seront effacés. Exportez avant si vous en avez encore besoin.</string>
+    <string name="delete">Supprimer</string>
+    <string name="cancel">Annuler</string>
+</resources>
