@@ -3,8 +3,12 @@ name: Build APK
 # Builds the Android app in the cloud and publishes the APK as a downloadable
 # artifact. No Android Studio, no local SDK, no Gradle on your machine.
 #
-# Run it from the "Actions" tab -> "Build APK" -> "Run workflow", or push a
-# change under android/.
+# Run it from the "Actions" tab -> "Build APK" -> "Run workflow".
+#
+# Note: we deliberately do NOT use android-actions/setup-android. The runner
+# image already contains the SDK (with accepted licences), and that action's
+# `sdkmanager --update` step is a common source of "failed with exit code 1".
+# We use the preinstalled SDK and only install a package if it is missing.
 
 on:
   push:
@@ -19,7 +23,8 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # The 22.04 image ships the Android SDK 34 that this project targets.
+    runs-on: ubuntu-22.04
 
     defaults:
       run:
@@ -46,8 +51,33 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Use the preinstalled Android SDK
+        run: |
+          SDK="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
+          echo "ANDROID_HOME=${ANDROID_HOME:-unset}"
+          echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-unset}"
+          if [ -z "$SDK" ] || [ ! -d "$SDK" ]; then
+            echo "::error::No Android SDK found on this runner image."
+            exit 1
+          fi
+          echo "sdk.dir=$SDK" > local.properties
+          echo "Platforms:"; ls "$SDK/platforms" 2>/dev/null || true
+          echo "Build tools:"; ls "$SDK/build-tools" 2>/dev/null || true
+
+          SDKMANAGER="$(command -v sdkmanager || true)"
+          if [ -z "$SDKMANAGER" ] && [ -x "$SDK/cmdline-tools/latest/bin/sdkmanager" ]; then
+            SDKMANAGER="$SDK/cmdline-tools/latest/bin/sdkmanager"
+          fi
+
+          if [ ! -d "$SDK/platforms/android-34" ] || [ ! -d "$SDK/build-tools/34.0.0" ]; then
+            echo "Installing missing platform/build-tools (this is normal on newer images)"
+            if [ -z "$SDKMANAGER" ]; then
+              echo "::error::platforms;android-34 is missing and sdkmanager was not found."
+              exit 1
+            fi
+            timeout 300 bash -c "yes | '$SDKMANAGER' --licenses" > /dev/null 2>&1 || true
+            timeout 600 "$SDKMANAGER" "platforms;android-34" "build-tools;34.0.0" > /dev/null
+          fi
 
       - name: Install Gradle 8.7
         run: |
@@ -59,7 +89,6 @@ jobs:
         run: |
           java -version
           gradle --version
-          echo "ANDROID_HOME=$ANDROID_HOME"
 
       - name: Cache Gradle
         uses: actions/cache@v4
@@ -80,9 +109,6 @@ jobs:
           path: ~/.android/debug.keystore
           key: pinbot-debug-keystore-v1
 
-      - name: Unit tests (layout validator)
-        run: gradle testDebugUnitTest --no-daemon --console=plain --stacktrace
-
       - name: Build debug APK
         run: gradle assembleDebug --no-daemon --console=plain --stacktrace
 
@@ -91,6 +117,8 @@ jobs:
           mkdir -p ../dist
           cp app/build/outputs/apk/debug/app-debug.apk "../dist/pin-scanner-${{ github.run_number }}.apk"
 
+      # Uploaded before the tests run, so an installable APK is available even
+      # if the validator tests catch a regression.
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
@@ -98,3 +126,6 @@ jobs:
           path: dist/*.apk
           if-no-files-found: error
           retention-days: 90
+
+      - name: Unit tests (layout validator)
+        run: gradle testDebugUnitTest --no-daemon --console=plain --stacktrace
